@@ -17,7 +17,7 @@ I know there's only a handful that I can truly focus on at a time, which is why 
 - At least 1 public cloud - AWS
 - a bit of Docker and Kubernetes
 
-Yeah I know, that's still a lot. I'm still in progress on learning these stuff. AWS Itself is an entire *universe* of learnings and I've been very fortunate to have learned about it and fortunately, bagged the Practitioner and Architect exam last year.
+Yeah I know, that's still a lot. I'm still in progress on learning these stuff. AWS Itself is an entire *universe* of learnings and I've been lucky to have learned about it and fortunately, bagged the Practitioner and Architect exam last year.
 
 So this year, I'm targeting the two remaining Associate certifications. And I'll be starting off with the **AWS SysOps Administrator**.
 
@@ -33,7 +33,7 @@ As for the review materials, I'll also be focusing myself on these materials:
 
 - [[NEW] AWS Certified SysOps Administrator Associate 2021](https://www.udemy.com/course/aws-certified-sysops-administrator-associate-training/) by Neal Davis
 
-- [AWS Certified SysOps Administrator Associate Practice Exams 2021](https://portal.tutorialsdojo.com/product/aws-certified-sysops-administrator-associate-practice-exams/) bu Tutorials Dojo
+- [AWS Certified SysOps Administrator Associate Practice Exams 2021](https://portal.tutorialsdojo.com/product/aws-certified-sysops-administrator-associate-practice-exams/) by Tutorials Dojo
 
 - Official AWS Documentation
 
