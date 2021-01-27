@@ -50,7 +50,6 @@ ________________________________________________
 ## PLACEMENT GROUPS - C.S.P. ##
 
 These are used to control EC2 Placement strategy within the AWS infrastructure.
-
 - no direct interaction with hardware
 - we just let AWS know how we want our instances 'arranged'
 - three EC2 placement group options:
