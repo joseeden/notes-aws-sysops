@@ -61,13 +61,13 @@ These are used to control EC2 Placement strategy within the AWS infrastructure.
 
 2.  **Spread**
     - instances are spread across different hardware
-    - limit of **7** instances **per group per AZ**
+    - MAX: **7** instances **per group per AZ**
     - for critical applications
 
 3.  **Partition**
     - similar with spread, but spread on different partitions on different racks within an AZ
     - failures can be isolated by partitions
-    - up to 100 instances per group
+    - up to **100 instances per group**
     - used for big data applications (Hadoop, Cassandra, Kafka)
 
 ________________________________________________
