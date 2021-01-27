@@ -18,6 +18,7 @@ ________________________________________________
 ## CHANGING INSTANCE TYPE ##
 
 This is a commonly done in SysOps. Notes to remember are:
+
 - can only be done on EBS-backed instances
 - you need to stop the instance before changing the instance type
 - from instance settings, click **Change Instance Type** 
@@ -50,10 +51,13 @@ ________________________________________________
 ## PLACEMENT GROUPS - C.S.P. ##
 
 These are used to control EC2 Placement strategy within the AWS infrastructure.
+
 - no direct interaction with hardware
 - we just let AWS know how we want our instances 'arranged'
 - three EC2 placement group options:
+
 <br>
+
     1.  **Cluster**
         - same rack, same AZ
         - Instances are grouped together in 1 Availability Zone.
