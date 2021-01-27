@@ -16,7 +16,7 @@ The focus of these note will be on EC2 from the SysOps perspective:
 - AMI
 - CloudWatch
 
-It is also assumed that you have prior knowledge to some basics of Amazon Web Services. The  AWS Console UI changes from time to time so the images that you may see in my notes might not be the same with what you see on your console.
+It is also assumed that you have prior knowledge or some basics of Amazon Web Services. The  AWS Console UI changes from time to time so the images that you may see in my notes might not be the same with what you see on your console.
 
 This note are broken down into these sections:
 
@@ -249,17 +249,27 @@ You can set choose instance types during creation of instance
 
 ![](../Images/ec2-instance-type.png)
 
-**INTERRUPTION BEHAVIOR**
+#### INTERRUPTION BEHAVIOR ####
 You can set what will happen to your spot instance when it is terminated and reclaimed by AWS.
 - terminate / delete
 - stop instance (you can then re-assign workload or change instance type)
 
-**PERSISTENT REQUEST**
+#### PERSISTENT REQUEST ####
 When you have a persistent spot request, you'll automatically have another spot instance created when the current instance is terminated by AWS. 
 
 Note that if you terminate your own instance, it will just go through the same cycle - AWS checks if spot request is still valid and if it is, it will launch a new instance. To fully stop an instance from going through the persistent request cycle:
-1.  delete first the spot request
-2.  then delete the instances
+
+1.  Spot request must be in either of these states:
+    - **open**
+    - **active**
+    - **disabled state**
+2.  Cancelling a spot request does not terminate the instance
+3.  You must first cancel the spot request
+4.  then delete the instances
+
+<p align=center>
+    <img src="../Images/persistent-request.png" width=300>
+</p>
 
 To configure persistent request and interruption behavior
 
@@ -271,8 +281,9 @@ ________________________________________________
 **SPOT INSTANCES**
 You can defined a max spot price and get the instance while **current spot price < max price you're willing to pay**.
 
-- spot prices are most of the time stable for a certain period 
+- spot prices are quite stable for periods of time
 - but it will be projected as changing from the exam's perspective
+- you define the max spot price you're willing to pay in a **spot request** 
 - the hourly spot price varies based on **offer** and **capacity**
 - AWS gives **2 minutes period** before fully reclaiming spot instance
 - if you don't want the instances to be reclaimed, you can use Spot Block
@@ -281,3 +292,38 @@ You can defined a max spot price and get the instance while **current spot price
 You can *block* spot instances for a specified period of time without interruptions.
 - 1 to 6 hours
 - this is pretty rare since AWS can still reclaim the instance
+
+**SPOT REQUEST**
+This contains the following details
+- Max price you're willing to pay
+- Desired number of instances
+- Launch specifications
+- Validity - from and to
+- Request-type:
+    - **One-time**
+        As soon as your request is fulfilled and spot instances are launched, the spot request is deleted.
+
+    - **Persistent**
+        Spot request will keep fulfilling the desired number of instance during it's period. This meant automatically creating another instance when current number of instance goes beyond the desired number. Cancelling persistent requests are discussed [here](#persistent-request)
+
+**SPOT FLEET**
+It is a set of mixed type of instances - Spot + On-demand
+- Builds target capacity based on price constraints
+- Can have multiple launch pools to choose from
+- Automatically does the 'mix-and-match' based on your budget
+- You can define your strategies:
+    
+    - **lowestprice**
+        - Launching instances from pool with the lowest price
+        - cost optimization
+        - short workloads
+
+    - **diversified**
+        Launched instances are distributed across pools
+        - great for availability
+        - longer workloads
+
+    - **capacityOptimized**
+        Instances are chosen from pool with optimal capacity
+
+
