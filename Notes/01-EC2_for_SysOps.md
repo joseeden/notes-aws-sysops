@@ -75,6 +75,11 @@ These are used to control EC2 Placement strategy within the AWS infrastructure.
 - three EC2 placement group options:
 
 1.  **Cluster**
+
+
+
+
+z
     - same rack, same AZ
     - Instances are grouped together in 1 Availability Zone.
     - low latency - 10 Gbps BW 
@@ -539,14 +544,12 @@ To install the older CloudWatch Logs Agent on our EC2 instance, we'll be followi
 
     ![](../Inages/cw-logs-agent-2.png)
 
-    <br>
-
 2.  **Install and Configure CloudWatch Logs on an Existing Amazon EC2 Instance**
     - since I currently have 2 instances running, I'll use the command below to install CloudWatch Logs on both:
         
             sudo yum install -y awslogs
 
-    ![](../Images/cw-logs-agent-3.png)
+        ![](../Images/cw-logs-agent-3.png)
 
 3.  **Edit the /etc/awslogs/awslogs.conf file to configure the logs to track**
     - we can leave this on default for now
