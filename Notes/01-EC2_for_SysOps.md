@@ -22,9 +22,6 @@ This is a commonly done in SysOps. Notes to remember are:
 - can only be done on EBS-backed instances
 - you need to stop the instance before changing the instance type
 - from instance settings, click **Change Instance Type** 
-
-    ![](../Images/ec2-change-instance-type.png)
-
 - we can upsize and downsize
 - on some instances, we have an option to tick **EBS Optimized**
 - once changed, restart instance
