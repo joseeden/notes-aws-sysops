@@ -50,26 +50,27 @@ These are used to control EC2 Placement strategy within the AWS infrastructure.
 - no direct interaction with hardware
 - we just let AWS know how we want our instances 'arranged'
 - three EC2 placement group options:
-    1.  **Cluster**
-        - same rack, same AZ
-        - Instances are grouped together in 1 Availability Zone.
-        - low latency - 10 Gbps BW 
-        - high performance, but high risk
-        <br>
-            
-            ![](../Images/ec2-cluster.png)
 
-        <br>
-    2.  **Spread**
-        - instances are spread across different hardware
-        - limit of **7** instances **per group per AZ**
-        - for critical applications
+1.  **Cluster**
+    - same rack, same AZ
+    - Instances are grouped together in 1 Availability Zone.
+    - low latency - 10 Gbps BW 
+    - high performance, but high risk
+    <br>
+        
+        ![](../Images/ec2-cluster.png)
 
-    3.  **Partition**
-        - similar with spread, but spread on different partitions on different racks within an AZ
-        - failures can be isolated by partitions
-        - up to 100 instances per group
-        - used for big data applications (Hadoop, Cassandra, Kafka)
+    <br>
+2.  **Spread**
+    - instances are spread across different hardware
+    - limit of **7** instances **per group per AZ**
+    - for critical applications
+
+3.  **Partition**
+    - similar with spread, but spread on different partitions on different racks within an AZ
+    - failures can be isolated by partitions
+    - up to 100 instances per group
+    - used for big data applications (Hadoop, Cassandra, Kafka)
 
 ________________________________________________
 
