@@ -56,11 +56,9 @@ These are used to control EC2 Placement strategy within the AWS infrastructure.
     - Instances are grouped together in 1 Availability Zone.
     - low latency - 10 Gbps BW 
     - high performance, but high risk
-    <br>
         
-        ![](../Images/ec2-cluster.png)
+    ![](../Images/ec2-cluster.png)
 
-    <br>
 2.  **Spread**
     - instances are spread across different hardware
     - limit of **7** instances **per group per AZ**
