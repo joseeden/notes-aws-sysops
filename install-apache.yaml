@@ -1,0 +1,19 @@
+---
+    schemaVersion: '2.2'
+    description: YAML file to install Apache on the instances
+    parameters:
+        Message:
+            type: "String"
+            description: "Welcome Message"
+            default: "Hello from the Other Side!"
+    mainSteps:
+    -
+        action: aws:runShellScript
+        name: configureApache
+        inputs:
+            runCommand:
+            - 'sudo yum update -y'
+            - 'sudo yum install -y httpd'
+            - 'sudo systemctl start httpd'
+            - 'sudo systemctl enable httpd'
+            - 'echo  "{{Message}} from $(hostname -f)" > /var/www/html/index.html'
