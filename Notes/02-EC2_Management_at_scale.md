@@ -257,7 +257,7 @@ We'll be using the same lab all throughout this section. For this one, we we wil
 
     ![](../Images/ssm-doc-8.png)
 
-    ![](Images/ssm-doc-9.png)
+    ![](..Images/ssm-doc-9.png)
 
 8.  You can also see the logs in Systems Manager. Go to **Systems Manager > Run command > select an instance > see the output at the bottom**
 
