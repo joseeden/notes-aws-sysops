@@ -75,11 +75,6 @@ These are used to control EC2 Placement strategy within the AWS infrastructure.
 - three EC2 placement group options:
 
 1.  **Cluster**
-
-
-
-
-z
     - same rack, same AZ
     - Instances are grouped together in 1 Availability Zone.
     - low latency - 10 Gbps BW 
@@ -135,7 +130,6 @@ Protection against accidental termination in AWS Console or CLI.
 ________________________________________________
 
 ## EC2 LAUNCH ISSUES ##
-
 
 **InstanceLimitExceededError**
 This means you have reached max number of running On-demand instances per region. The limits are counted in vCPU.
@@ -539,10 +533,14 @@ To install the older CloudWatch Logs Agent on our EC2 instance, we'll be followi
     - Hit next until you reach last page.
     - Put a role name and a brief description.
 
-
     ![](../Images/cw-logs-agent-1.png)
 
-    ![](../Inages/cw-logs-agent-2.png)
+    ![](../Images/cw-logs-agent-2.png)
+
+    - Once you've created the role, attach it to your running EC2 instances
+    - select instance then **Actions > Security > Modify IAM Role**
+
+        ![](../Images/cw-logs-agent-2-5.png)
 
 2.  **Install and Configure CloudWatch Logs on an Existing Amazon EC2 Instance**
     - since I currently have 2 instances running, I'll use the command below to install CloudWatch Logs on both:
@@ -577,6 +575,7 @@ To install the older CloudWatch Logs Agent on our EC2 instance, we'll be followi
 5.  **If you are running Amazon Linux 2, enable and start the awslogs service with the following command.**
 
     ```bash
+    sudo systemctl enable awslogsd
     sudo systemctl start awslogsd
     sudo systemctl status awslogsd
     ```
@@ -584,8 +583,289 @@ To install the older CloudWatch Logs Agent on our EC2 instance, we'll be followi
 6.  **The logs should now start streaming to CloudWatch.**
     - You might need to wait for a bit to see the logs
 
+        ![](../Images/cw-logs-agent-4.png)
 
+_____________________________________________________________
 
+<code>EDEN: I was not initially seeing the /var/log/messages in the Log Groups in the CloudWatch console even after a couple of minutes have passed already.</code>
+
+<code>So I checked online and saw this [article](https://aws.amazon.com/premiumsupport/knowledge-center/push-log-data-cloudwatch-awslogs/) on how to troubleshoot when log groups doesn't appear in the CloudWatch console. It suggested to check */var/log/awslogs.log* and I sure did saw an error which was preventing the logs from being pushed to CloudWatch. It was a **NoCredentialsError: Unable to locate credentials**.</code>
+
+<code>Turns out I forgot to attach the IAM role I just created to the EC2 instances. After attaching the role and then restarting the awslogsd service in both instances, I checked the */var/log/awslogs.log* once again to see if the error is still there.</code>
+
+<code>What I saw in the file was a bunch of JSON-formatted text - success.
+I refreshed the CloudWatch console and the /var/log/messages log group is now there.</code>
 ____________________________________________________
 
+<!-- 2021-02-01 05:38:59 -->
+
 ## UNIFIED CLOUDWATCH AGENT ##
+
+Agent that does metrics and logs at the same time.
+For this one, we'll do a sample laba dn we'll be utilizing a role that has **CloudWatchAgentAdminPolicy** attached.
+
+This policy allows us to collect logs and send custom metrics into CloudWatch. It has also the *SSM:GetParameter* and *SSM:PutParameter* which allows us to fetch and push configuration from/to SSM.
+
+The main purpose of the **Unified CloduWatch Agent** is to have a stored parameter** which can always be pulled by your isntances to run the agent.
+
+**SAMPLE LAB**
+
+1.  Create a role with **CloudWatchAgentAdminPolicy** attached.
+
+    ![](../Images/cw-ucwa-1.JPG)
+    ![](../Images/cw-ucwa-2.png)
+
+2.  Create an instance and attach the newly created role.
+3.  Connect to the instance and install a simple Apche web server.
+    Enable and start httpd.
+
+    ```bash
+    sudo yum install -y httpd
+    sudo systemctl enable httpd
+    sudo systemctl start httpd
+    sudo systemctl status httpd
+    ```
+4.  Create a simple index.html file.
+
+    ```bash
+    echo 'Hello from the Other side!' > /var/www/html/index.html
+    ```
+5.  Copy the public DNS of the instanc eand open it in a browser. You should see something like this.
+
+    ![](../Images/cw-ucwa-3.png)
+
+6.  We will be using two logs for the httpd service. We will be streamign both of these logs to CloudWatch.
+
+    ```bash
+    [root@ip-172-31-47-113 ec2-user]# ll /var/log/httpd/
+    total 8
+    -rw-r--r-- 1 root root 733 Jan 31 22:04 access_log
+    -rw-r--r-- 1 root root 967 Jan 31 22:01 error_log
+    ```
+
+7. Next step is to setup the CloudWatch Unified Agent on the instance. We start with downloading the rpm file.
+
+    ```bash
+    wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
+    ```
+
+8. Install the CloudWatch Agent on the instance.
+
+    ```bash
+    sudo rpm -U ./amazon-cloudwatch-agent.rpm
+    ```
+
+9.  Run the wizard which will do the agent configuration setup for us.
+
+    ```bash
+    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
+    ```
+
+    Note that you'll ne prompted to answer questions. Use the number corresponding to the answers below.
+
+    | Questions | Answers |
+    |:- | :- |
+    | On which OS are you planning to use the agent? | linux |
+    | Are you using EC2 or On-Premises hosts? | EC2 |
+    | Which user are you planning to run the agent? | root |
+    | Do you want to turn on StatsD daemon? | Yes |
+    | Which port do you want StatsD daemon to listen to? | 8125 |
+    | What is the collect interval for StatsD daemon? | 10s |
+    | What is the aggregation interval for metrics collected by StatsD daemon? | 60s |
+    | Do you want to monitor metrics from CollectD? | Yes |
+    | Do you want to monitor any host metrics? e.g. CPU, memory, etc. | Yes |
+    | Do you want to monitor cpu metrics per core? Additional CloudWatch charges may apply. | Yes |
+    | Do you want to add ec2 dimensions (ImageId, InstanceId, InstanceType, AutoScalingGroupName) into all of your metrics if the info is available? | Yes |
+    | Would you like to collect your metrics at high resolution (sub-minute resolution)? This enables sub-minute resolution for all metrics, but you can customize for specific metrics in the output json file. | 60s |
+    | Which default metrics config do you want? | Basic |
+
+    After answering the first set of questions, you'll be shown the current configuration:
+
+    ```bash
+    Current config as follows:
+    {
+            "agent": {
+                    "metrics_collection_interval": 60,
+                    "run_as_user": "root"
+            },
+            "metrics": {
+                    "append_dimensions": {
+                            "AutoScalingGroupName": "${aws:AutoScalingGroupName}",
+                            "ImageId": "${aws:ImageId}",
+                            "InstanceId": "${aws:InstanceId}",
+                            "InstanceType": "${aws:InstanceType}"
+                    },
+                    "metrics_collected": {
+                            "collectd": {
+                                    "metrics_aggregation_interval": 60
+                            },
+                            "disk": {
+                                    "measurement": [
+                                            "used_percent"
+                                    ],
+                                    "metrics_collection_interval": 60,
+                                    "resources": [
+                                            "*"
+                                    ]
+                            },
+                            "mem": {
+                                    "measurement": [
+                                            "mem_used_percent"
+                                    ],
+                                    "metrics_collection_interval": 60
+                            },
+                            "statsd": {
+                                    "metrics_aggregation_interval": 60,
+                                    "metrics_collection_interval": 10,
+                                    "service_address": ":8125"
+                            }
+                    }
+            }
+    }
+    ```
+
+    You'll then be ask with a second set of questions. Use the number corresponding to the answers below.
+
+    | Questions | Answers |
+    | :- | :- |
+    | Are you satisfied with the above config? Note: it can be manually customized after the wizard completes to add additional items. | Yes |
+    | Do you have any existing CloudWatch Log Agent (http://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AgentReference.html) configuration file to import for migration?<br>(This is used if you have an existing agent on the instance that you want to import. In our case, it's our first time installing the agent so we'll just choose No) | No |
+    | Do you want to monitor any log files?<br>(This will be the two files that we want to stream to CloudWatch) | Yes |
+    | Log file path | /var/log/httpd/access_log |
+    | Log group name | [access_log] |
+    | Log stream name | [{instance_id}] |
+    | Do you want to specify any additional log files to monitor? | /var/log/httpd/error_log |
+    | Log group name | [error_log] |
+    | Log stream name | [{instance_id}] |
+    | Do you want to specify any additional log files to monitor? | No | 
+
+    You'll again be shown the current configurations.
+
+    ```bash
+    Saved config file to /opt/aws/amazon-cloudwatch-agent/bin/config.json successfully.      
+    Current config as follows:
+    {
+            "agent": {
+                    "metrics_collection_interval": 60,
+                    "run_as_user": "root"
+            },
+            "logs": {
+                    "logs_collected": {
+                            "files": {
+                                    "collect_list": [
+                                            {
+                                                    "file_path": "/var/log/httpd/access_log",                                                "log_group_name": "access_log",
+                                                    "log_stream_name": "{instance_id}"       
+                                            },
+                                            {
+                                                    "file_path": "/var/log/httpd/error_log", 
+                                                    "log_group_name": "error_log",
+                                                    "log_stream_name": "{instance_id}"       
+                                            }
+                                    ]
+                            }
+                    }
+            },
+            "metrics": {
+                    "append_dimensions": {
+                            "AutoScalingGroupName": "${aws:AutoScalingGroupName}",
+                            "ImageId": "${aws:ImageId}",
+                            "InstanceId": "${aws:InstanceId}",
+                            "InstanceType": "${aws:InstanceType}"
+                    },
+                    "metrics_collected": {
+                            "collectd": {
+                                    "metrics_aggregation_interval": 60
+                            },
+                            "disk": {
+                                    "measurement": [
+                                            "used_percent"
+                                    ],
+                                    "metrics_collection_interval": 60,
+                                    "resources": [
+                                            "*"
+                                    ]
+                            },
+                            "mem": {
+                                    "measurement": [
+                                            "mem_used_percent"
+                                    ],
+                                    "metrics_collection_interval": 60
+                            },
+                            "statsd": {
+                                    "metrics_aggregation_interval": 60,
+                                    "metrics_collection_interval": 10,
+                                    "service_address": ":8125"
+                            }
+                    }
+            }
+    }
+    Please check the above content of the config.
+    The config file is also located at /opt/aws/amazon-cloudwatch-agent/bin/config.json.     
+    Edit it manually if needed.
+    ```
+
+    Note that the configuration can be modified anytime by editing the **/opt/aws/amazon-cloudwatch-agent/bin/config.json** file
+
+    This will be followed by a final set fo questions.
+
+    | Questions  | Answers | 
+    | :- | :- |
+    | Do you want to store the config in the SSM parameter store? | yes |
+    | What parameter store name do you want to use to store your config? (Use 'AmazonCloudWatch-' prefix if you use our managed AWS policy) | [AmazonCloudWatch-linux] |
+    | Which region do you want to store the config in the parameter store?<br>(This will depend on the region where your isntance is.) | [ap-southeast-1] |
+    | Which AWS credential should be used to send json config to parameter store? | From SDK | 
+
+    once everythign is good, you should see a successful confirmation after the last question.
+
+    ```bash
+    Successfully put config to parameter store AmazonCloudWatch-linux.
+    Program exits now.
+    ```
+
+10. We now proceed to **AWS Systems Manager(SSM) > Parameter Store**. Click the one created earlier - **AmazonCloudWatch-Linux**. This can now server as a parameter configuration which can be used when you create another instance and you want to install CloudWatch Unified Agent onto it as well.
+
+    ![](../Images/ssm.png)
+
+11. To ensure the process will not fail, we'll have to first create the **/usr/share/collectd/types.db** file
+
+    ```bash
+    mkdir -p mkdir -p /usr/share/collectd/
+    touch /usr/share/collectd/types.db
+    ```
+
+12. To start the agent, we have two options
+
+    ```bash
+    # Option 1 - boot CloudWatch agent from an ssm configuration-parameter-store name
+    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:<insert-parameter-store-name-here> -s
+
+    # Option 2 - directly boot it from a file in a file path
+    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:<insert-configuration-file-path-here> -s
+    
+    ```
+
+    For our lab, we will use the first option
+
+    ```bash
+    sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c ssm:AmazonCloudWatch-linux -s
+    ```
+
+13. We should now be seeing the CloudWatch logs and metrics in CloudWatch. Go to **CloudWatch > Log groups**.
+
+    ![](../Images/cw-ssm-1.png)
+
+________________________________________________________
+
+#### WHAT ARE THE METRICS THAT BE COLLECTED BY THE CLOUDWATCH AGENT? ####
+
+You can see a complete listing of the metrics that can collected by the CloudWatch agent in the [AWS Documentation page](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/metrics-collected-by-CloudWatch-agent.html). These are just a few of them:
+
+- cpu_time_active
+- cpu_time_guest
+- cpu_time_guest_nice
+- swap_free
+- swap_used
+- swap_used_percent
+
+________________________________________________________
