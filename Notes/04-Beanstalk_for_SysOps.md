@@ -193,7 +193,7 @@ If health of environment changes to red, you can try the following:
 
 When accessing external resources, make sure security groups are configured correctly.
 
-In case of **TIMEOUTS**, you can increase deloyment timeouts.
+In case of **TIMEOUTS**, you can increase deployment timeouts.
 
 ### DEPLOYMENT MODES ###
 
