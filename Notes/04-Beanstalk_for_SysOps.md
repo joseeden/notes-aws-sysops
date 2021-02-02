@@ -198,4 +198,5 @@ In case of **TIMEOUTS**, you can increase deloyment timeouts.
 ### DEPLOYMENT MODES ###
 
 <img src="../Images/deploy-6.png" width=800>
+
 ___________________________________________________
