@@ -22,10 +22,10 @@ This note will be broken down into the following sections:
 3.  [AWS Tags and Resource Groups](#aws-tags-and-resource-groups)
 4.  [SSM Documents and Run Command](#ssm-documents-and-run-command)
 5.  [SSM Inventory and Patches](#ssm-inventory-and-patches)
-6.  [SSM Secure Shell]()
-7.  [What if I lose my EC2 SSH Key?]()
-8.  [SSM Parameter Store Overview]()
-9.  [AWS Opsworks Overview]()
+6.  [SSM Secure Shell](#ssm-secure-shell)
+7.  [What if I lose my EC2 SSH Key?](#what-if-i-lose-my-ec2-ssh-key)
+8.  [SSM Parameter Store Overview](#ssm-parameter-store-overview)
+9.  [AWS Opsworks Overview](#aws-opsworks-overview)
 ______________________________________________
 
 ## AWS SYSTEMS MANAGER OVERVIEW ##
@@ -120,7 +120,7 @@ We'll use the same three instances from the last lab.
     | Instance 2 | Name | eden-prod-svr |
     | | Environment | prod | 
     | | Team | anaheim |
-    | Instance 1 | Name | eden-dev2-svr |
+    | Instance 3 | Name | eden-dev2-svr |
     | | Environment | dev | 
     | | Team | orlando |
 
@@ -267,4 +267,144 @@ We'll be using the same lab all throughout this section. For this one, we we wil
 
 _________________________________________________________
 
+<!-- 2021-02-01 21:31:00 -->
+
 ## SSM INVENTORY AND PATCHES ##
+
+We can use AWS Systems Manager to patch all our instances. It also gives us visibility on the progress of the patches. There are many ways to patch instances:
+
+- **inventory** - list software on an instance
+- **inventory + run command** - allows us to patch software
+- **Patch manager + Maintenance Window** - allows us to patch OS
+- **Patch compliance** - gives us compliance insights
+- **State manager** - ensures instances are in a consistent state 
+
+**SAMPLE LAB**
+1.  Go to **Systems Manager > Inventory**. 
+    Under the **Managed instances with inventory enabled**, hit '*click to enable*'. Once it shows good, click **View details**. You should see somethng like this
+
+    ![](../Images/ssm-inven-3.png)
+
+    Notice the **Schedule Expression Rate** - this is how often the instances will report to SSM. After a couple of minutes, you should see the job succeeding.
+
+2.  Going back to inventory and scroll down to the bottom. You should see the three instances we worked on the previous labs. You cna click on any of this instance and you'll be able to see the softwares installed by checking the **Inventory** tab.
+
+    ![](../Images/ssm-inven-4.png)
+
+    ![](../Images/ssm-inven-5.png)
+
+**PATCH MANAGER**
+You can use the patch manager to apply patching or configure patching automatically on the instances based on tags, etc.
+_________________________________________________________
+
+## SSM SECURE SHELL ##
+
+#### SESSION MANAGER ####
+This allows you to start a secure shell in your VM but it does not use SSH access or bastion hosts.
+- currently works on EC2 only
+- logs action done to the targets through secure shell to S3 and CloudWatch Logs - this **needs to be enabled**
+- we need IAM permissions on the EC2 instance which can:
+    - access SSM
+    - write to S3
+    - write to CloudWatch
+- CloudTrail can intercept **StartSession events.**
+- Advantage against SSH:
+    - no need for port 22
+    - no need for bastion hosts
+    - all commands are logged to S3/CloudWatch - useful for auditing
+    - access to secure shell is done through **User IAM** and not SSH keys
+
+#### SAMPLE LAB ####
+
+1.  Create a log group in CloudWatch - **eden-ssm-secureshell-logs** - this is where all the logs for secure shell will stream.
+
+2.  Go to **Systems Manager > Session Manager > Configure preferences**.
+    Make sure untick box for **Enforce encryption**. Click *enable* under the **CloudWatch logging** section. and then choose the log group we just created.
+
+    ![](../Images/ssm-secshell-1.png)
+    ![](../Images/ssm-secshell-2.png)
+
+    Once you're done, hit **Save** at the bottom of the page.
+
+3.  Recall that port 22 is not allowed in the security group of our three instances. To start a secure shell session to one of the instance, go to **Systems Manager > Session Manager > Sessions > Start session**
+    Select an instance and click **Start Session** at the bottom.
+
+    ![](../Images/ssm-secshell-3.png)
+
+    You can see all sessions that were created by looking at the **Session History** tab.
+
+_________________________________________________________________
+
+## WHAT IF I LOSE MY EC2 SSH KEY? ##
+
+This is a commonly asked question in the exam. The answer depends on whether the instance is:
+
+- **EBS backed - traditional method**
+    1.  If you lose your EC2 SSH key, stop instance, and detach the root volume
+    2.  Attach the root volume on another instance as a data volume.
+    3.  Ssh to the new instance and 
+    4.  Modify **~/.ssh/authorized_keys** file and add your new key.
+    5.  After modifying, move the volum back to the stopped instance.
+    6.  Start the instance and SSH again to the instance.
+
+- **EBS - new method**
+    1.  Run the **AWSSupport-ResetAccess** automatio document in SSM.
+    2.  SSM will now work in the background to restore your admin and ssh privileges
+
+- **Instance store-backed**
+    1.  You can't stop the instance because you'll lose the data on it.
+    2.  For this one you cannot recover the ssh key and you can't do anything.
+    3.  AWS recommend terminating the instance.
+    4.  Tip: use Session Manager to access EC2 and edit the ~/.ssh/authorized_keys file directly.
+
+_________________________________________________________
+
+## SSM PARAMETER STORE OVERVIEW ##
+
+This allows us to store configurations and secrets.
+- option to use **Seamless encryption using KMS** to encrypt configurations you put in the parameter store
+- serverless,scaleable, durable, easy SDK, free
+- you can do **version tracking** of configurations and secrets
+- configuration management  using path and IAM
+- you can get notifications with **CloudWatch Events**
+- integration with **CloudFormation**
+
+<p align=center>
+    <img src="/Images/ssm-param-store.png">
+</p>
+
+### AWS PARAMETER STORE HIERARCHY ###
+
+You can organize the tree however you want. The main point is to have some convention or hierarchy on how to store the parameters
+
+<p align=center>
+    <img src="../Images/ssm-param-store-2.png">
+</p>
+
+To access parameters from the AWS CLI, you can use:
+
+    aws ssm get-parameters --names <insert-name-of-parameter>
+
+To access encrypted parameters
+
+    aws ssm get-parameters --names <insert-name-of-parameter> --with-decryption
+
+To query all parameters that are in a path:
+
+    aws ssm get-parameters-by-path --path <insert/path/here>
+
+    # we can also get all parameters recursively
+
+    aws ssm get-parameters-by-path --path <insert/> --recursive
+
+__________________________________________________________
+
+## AWS OPSWORKS OVERVIEW ##
+
+**Chef** and **Puppet** are both open-source software which you can use to perform server configurations and automations. They can work with EC2 and on-premise VM.
+
+**Opsworks** is basically the same as **Chef** and **Puppet**.
+- alternative to SSM
+- helps with managing configurations-as-code
+- helps in having consistent deployments
+__________________________________________________________
