@@ -115,7 +115,7 @@ This is great for production-type of deployments. Here you may have an ASG that 
     - once bucket is done and healthy, the next bucket is then updated
     - **long deployment** 
     
-    ![](../Images/deploy-2.jpg)
+    ![](../Images/deploy-1.png)
 
 3.  **ROLLING WITH ADDITIONAL BATCHES**
     - similar with rolling, but new instances are added
