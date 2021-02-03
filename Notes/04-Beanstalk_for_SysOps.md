@@ -153,7 +153,7 @@ This is not a *direct feature* but is a common practice.
 - the new environment (green) can be validated independently
 - it can also easily rollback in case of issues
 - **Route53** can be setup using weighted policies to redirect a portion of traffic to the stage environment
-- you cna then **swap URLs** when done with the environment test
+- you can then **swap URLs** when done with the environment test
     
 ![](../Images/deploy-5.jpg)
 
