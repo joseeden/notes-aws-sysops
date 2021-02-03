@@ -116,6 +116,7 @@ This is great for production-type of deployments. Here you may have an ASG that 
     - **long deployment** 
     
     ![](../Images/deploy-1.JPG)
+    
 
 3.  **ROLLING WITH ADDITIONAL BATCHES**
     - similar with rolling, but new instances are added
