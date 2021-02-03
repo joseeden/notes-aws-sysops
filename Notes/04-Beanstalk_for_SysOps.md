@@ -116,7 +116,7 @@ This is great for production-type of deployments. Here you may have an ASG that 
     - **long deployment** 
     
     ![](../Images/deploy-1.JPG)
-    
+
 
 3.  **ROLLING WITH ADDITIONAL BATCHES**
     - similar with rolling, but new instances are added
@@ -129,7 +129,7 @@ This is great for production-type of deployments. Here you may have an ASG that 
     - **good for production**
     - **longer deployment** 
 
-    ![](../Images/deploy-3.jpg)
+    ![](../Images/deploy-3.JPG)
 
 4.  **IMMUTABLE**
     - **Zero downtime**
@@ -143,7 +143,7 @@ This is great for production-type of deployments. Here you may have an ASG that 
     - when update fails, just terminate new ASG and restart process
     - **great for production - if you're prepared for cost**
 
-    ![](../Images/deploy-4.jpg)
+    ![](../Images/deploy-4.JPG)
 
 
 ### BLUE-GREEN DEPLOYMENT ###
@@ -156,7 +156,7 @@ This is not a *direct feature* but is a common practice.
 - **Route53** can be setup using weighted policies to redirect a portion of traffic to the stage environment
 - you can then **swap URLs** when done with the environment test
     
-![](../Images/deploy-5.jpg)
+![](../Images/deploy-5.JPG)
 
 ___________________________________________________
 
