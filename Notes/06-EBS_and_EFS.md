@@ -197,11 +197,11 @@ If you use EBS for **high-performance**,
 - you can see mroe details on the AWS Documentation page
 
 If an **EBS is unused**,
-- you still pay for ti
+- you still pay for it
 - remember that **you pay for the provisioned capacity**
 - you don't pay on how many of the storage you consumed
 - if you're just using half of the storage, you will still paythe whole price\
-- better to **start with small voluem then resize overtime**
+- better to **start with small volume then resize overtime**
 - you can also just **take a snapshot** and then delete the EBS Volume
 - you can always restore the same volume from the snapshot
 
@@ -216,12 +216,12 @@ _______________________________________________
 
 ## EBS RAID CONFIGURATIONS ##
 
-RAID configurations are normally done in datacenters for **redundancy**. IN EBS's case, **EBS is already a redundant storage.**
+RAID configurations are normally done in datacenters for **redundancy**. In EBS's case, **EBS is already a redundant storage.**
 - your EBS volume is replicated within your AZ
 - you have an option to **mirror** EBS Volumes
 - you could also **mount volumes in parallel** in RAID settings
 
-Note that RAIID is possible **only fi your OS supports it.**
+Note that RAIID is possible **only if your OS supports it.**
 - RAID 0
 - RAID 1
 - RAID 5 - not recommended for EBS
@@ -259,21 +259,21 @@ _________________________________________
 
 ## CLOUDWATCH AND EBS ##
 
-These are some of the improtant metrics that you need to know for the SysOps exam:
+These are some of the important metrics that you need to know for the SysOps exam:
 
 1.  **VolumeIdleTime** - number of seconds when no read/write is being submitted.
 
-2.  **VolumeQueueLenght** - number fo operations waiting to be executed.
+2.  **VolumeQueueLenght** - number of operations waiting to be executed.
 
 3.  **BurstBalance** - if this becomes 0, you need more IOPS
 
 
-Also note that there difference on the reporting interva of each EBS Volume type
+Also note that there difference on the reporting interval of each EBS Volume type
 
 - **gp2** - every 5 minutes
 - **io1**   - every 1 minute
 
-Similar with EC instances, EBS volumes also have status checks:
+Similar with EC2 instances, EBS volumes also have status checks:
 
 - **Okay** - volume is performing good
 - **Warning** - performance is below expected
@@ -293,7 +293,7 @@ _________________________________________
 - uses **NFSv4,1 protocol**
 - uses security groups to control access to EFS
 - **compatible with only Linux-based AMI**
-- you can **encrypt data t rest using KMS**
+- you can **encrypt data at rest using KMS**
 
 
 ### EFS - PERFORMANCE AND STORAGE CLASSES ###
