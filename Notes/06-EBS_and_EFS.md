@@ -2,7 +2,7 @@
 # 06 - EBS and EFS #
 _________________________________________
 
-This note will dive in to the available storage options for EC2, EBS and EFS, but from a SysOps perspective. 
+This note will dive in to the available storage options for EC2, **EBS and EFS**, but from a SysOps perspective. 
 
 ![](../Images/06-preview.png)
 
