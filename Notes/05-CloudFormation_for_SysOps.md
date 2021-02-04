@@ -106,12 +106,139 @@ ______________________________
 
 ## LAB - CREATING STACKS ##
 
+We'll be using the [01-ec2.yaml](../01-ec2.yaml) whihc will launch a single instance using CloudFormation. Create your own YAML file and use the code below.
+
+```yaml
+---
+Resources:
+    MyInstance:
+        Type: AWS::EC2::Instance
+        Properties:
+            AvailabilityZone: us-east-1a
+            ImageId: ami-a4c7edb2
+            InstanceType: t2.micro
+```
+
+1.  Go to the CloudFormation console. Note that for this lab, we will be launching all templates in the **us-east-1 (N. Virginia)** region. Select **Create Stack**.
+
+    ![](../Images/cf-1.png)
+
+2.  You'll be brought to the next page which shows 4 steps. You can explore the options in each step but we'll do a simple one here.
+
+    - **Step 1:**
+    Template is ready > Upload a template file > Upload > Select your 01-ec2.yaml
+
+        ![](../Images/cf-2.png)
+
+        You can click **View Designer** to see it's diagram.
+    
+        ![](../Images/cf-3.png)
+    
+        To proceed with the steps, go back to previous page and hit **Next** at the bottom.
+
+    - **Step 2:**
+        Put in a Stack Name and then hit Next.
+
+    - **Step 3:**
+        You can explore the options here but we'll just hit Next again.
+
+    - **Step 4:**
+        You can review all the details here. Once they're all good, hit **Create Stack**.
+
+3.  You should now see the **EVents** tab. It will show the stack in **CREATE_IN_PROGRESS** status.
+
+    ![](../Images/cf-5.png)
+
+    ![](../Images/cf-6.png)
 
 ______________________________
 
 ## LAB - UPDATE AND DELETE STACKS ##
 
+For this lab, we'll be using the [02-update-ec2.yaml](../02-update-ec2.yaml).
+Basically, this script will add a **parameter** and we are also modifying the EC2 instance. In addition to that, there are two security groups and one elastic IP added.
 
+```yaml
+---
+Parameters:
+
+    SecurityGroupDescription:
+        Description: Security Group Description 
+        Type: String
+
+Resources:
+    
+    MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+        AvailabilityZone: us-east-1a
+        ImageId: ami-a4c7edb2
+        InstanceType: t2.micro
+        SecurityGroups: 
+        - !Ref SG-SSH
+        - !Ref SG-Server
+
+    # adding an elastic ip to our Instance
+    MyEIP:
+        Type: AWS::EC2::EIP
+        Properties:
+            InstanceId: !Ref MyInstance
+    
+    # creating the first security group 
+    SG-SSH:
+        Type: AWS::EC2::SecurityGroup 
+        Properties:
+            GroupDescription: Enable SSH access via port 22
+            SecurityGroupIngress: 
+            -
+                IpProtocol: tcp
+                FromPort: 22
+                ToPort: 22
+                CidrIp: 0.0.0.0/0
+    
+    # creating the second security group
+    SG-Server:
+        Type: AWS::EC2::SecurityGroup 
+        Properties:
+            GroupDescription: !Ref SecurityGroupDescription 
+            SecurityGroupIngress: 
+            -
+                IpProtocol: tcp
+                FromPort: 80
+                ToPort: 80
+                CidrIp: 0.0.0.0/0
+            -
+                IpProtocol: tcp
+                FromPort: 22
+                ToPort: 22
+                CidrIp: 0.0.0.0/0
+              
+```
+1.  To update the stack we created from the first lab, just select your stack and click **Update**.
+
+    ![](../Images/cf-7.png)
+
+2.  Choose **Replace current template** and then **Upload template file**. Select 02-update-ec2.yaml. Hit **Next** afterwards.
+
+    ![](../Images/cf-8.png)
+
+3.  You'll then be brought to **Parameter** section which will prompt you to enter a value. This is because we determined a **Parameter** section in our new template. Parameters are dynamic variables that user can modify.
+
+    ![](../Images/cf-9.png)
+
+4.  We'll not modify any options in Step 4 and proceed to **Review**. Notice at the bottom, we have a **Change Preview**. This shows what will be modified by the new template.
+
+    ![](../Images/cf-10.png)
+
+    Hit **Update Stack**.
+
+5.  Going back to the **Events** tab, you can see that teh stack is now in **UPDATE_IN_PROGRESS** status.
+
+    ![](../Images/cf-11.png)
+
+    ![](../Images/cf-12.png)
+
+To delete the components, you can simply delete the stacks we created and CloudFormation will take care of deleting the instances, security groups, etc.
 ______________________________
 
 <!-- 2021-02-04 02:27:12 -->
