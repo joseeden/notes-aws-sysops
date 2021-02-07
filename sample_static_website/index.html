@@ -1,0 +1,28 @@
+
+<html>
+	<head><title> My Favorite film</title></head>
+
+	<body>
+	<h1> My Favorite film as a kid is Lion King.</h1>
+	<p> Here's a scene where a Mufasa tells Simba the greatest f*cking line ever. </p>
+	</body>
+
+	<img src="Lionking.jpg" width=500/>
+
+
+
+<!----CORS----->
+
+	<div id="tofetch">
+	<script>
+		var tofetch = document.getElementId("tofetch");
+	
+		fetch('extra-page.html')
+		.then((response) => {
+			return response.text();
+		})
+		.then((html) => {
+			tofetch.innerHTML = html
+		});
+	</script>
+</html>
