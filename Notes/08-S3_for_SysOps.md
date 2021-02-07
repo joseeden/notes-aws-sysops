@@ -93,11 +93,11 @@ The new way is to use **Default encryption** under the **Properties** tab.
 Note that **Bucket Policies are evaluated first before default encryption.**
 _______________________________________________
 
+<p align=right>
+    <img src="../Images/s3-access-logs.jpg" align="right" width=100>
 
 ## S3 Access Logs ##
 
-<p align=right>
-    <img src="../Images/s3-access-logs.jpg" align="right" width=100>
 
 You may have an entire bucket dedicated for S3 logs for audit purposes.
 
