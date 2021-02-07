@@ -97,8 +97,8 @@ _______________________________________________
 ## S3 Access Logs ##
 
 <p align=right>
-    <img src="../Images/s3-access-logs.jpg" style="float: right;" width=100>
-    
+    <img src="../Images/s3-access-logs.jpg" align="right" width=100>
+
 You may have an entire bucket dedicated for S3 logs for audit purposes.
 
 - any request made to S3 will be logged into these bucket
