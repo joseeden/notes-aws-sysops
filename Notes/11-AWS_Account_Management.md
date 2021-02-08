@@ -179,5 +179,4 @@ Tags are used to track resources that relate to each other. We can then use **Co
     - **User Tags**
         - tags defined by the user
         - starts with the prefix *user*
-    
 _____________________________________________
