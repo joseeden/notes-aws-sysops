@@ -52,7 +52,7 @@ As always, Stephane's method doesn't disappoint but I would say that you really 
 Having a prior extensive study in AWS also helped a lot in the speedy review, I would say. There were still some new topics or rather, some topics that were further explored in the SysOps review.
 
 **What comes next:** 
-Important stuff came up at work, have to study Containers, Kubernetes, and also explore more about Kafka so I'll give time on those first. The funny thing is, Stephane's also has some resources for Kafka, so I'll probably be continue sitting in at some of his materials for Kafka.
+Important stuff came up at work, have to study Containers and also explore more about Kafka so I'll give time on those first. The funny thing is, Stephane's also has some resources for Kafka, so I'll probably be continue sitting in at some of his materials for Kafka.
 
 On the side, I'll start with Neal Davis's two free practice test in his SysOps course. The plan is:
 
