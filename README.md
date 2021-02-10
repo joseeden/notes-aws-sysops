@@ -41,3 +41,29 @@ Okay, so it's currently 27-Jan-2021 and hopefully I'll get to update this by Mar
 
 Alright. Full steam ahead.
 __________________________________________________
+
+**UPDATE - 11-Feb-2021**
+
+I have finished Stephane Maarek's SysOps course. I had a 4 day downtime during the first few days because I had to focus on some stuff at work. I was able to focus at an intense pace during my 10-day leave.
+
+**Experience so far:** 
+As always, Stephane's method doesn't disappoint but I would say that you really have to have taken the AWS Solutions Architect exam or at least have some background on some of the ins and outs of Amazon Web Services as I find SysOps somewhat an continuation - what follows after you've built the whole setup as a Cloud Architect.
+
+Having a prior extensive study in AWS also helped a lot in the speedy review, I would say. There were still some new topics or rather, some topics that were further explored in the SysOps review.
+
+**What comes next:** 
+Important stuff came up at work, have to study Containers, Kubernetes, and also explore more about Kafka so I'll give time on those first. The funny thing is, Stephane's also has some resources for Kafka, so I'll probably be continue sitting in at some of his materials for Kafka.
+
+On the side, I'll start with Neal Davis's two free practice test in his SysOps course. The plan is:
+
+- **First round:** Finish Stephane's SysOps course
+- **Checkpoint:** Take practice test on Neal' SysOps course
+- **Second Round:** Go over the actual Davis' SysOps course
+- **Final Round:** Tutorial Dojo's Intensive SysOps Practice Tests
+
+Of course, I don't expect everything to be as flawless. 
+I know work and life may butt in from time to time, but I'll try to hopefully stick with this plan.
+
+Alright. Hope you ready for the next episode.
+
+__________________________________________________
