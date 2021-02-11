@@ -1,0 +1,23 @@
+{
+    "Version": "2012-10-17",
+    "Id": "example-ID",
+    "Statement": [
+      {
+        "Sid": "example-statement-ID",
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "s3.amazonaws.com"
+        },
+        "Action": "SQS:SendMessage",
+        "Resource": "arn:aws:sqs:ap-southeast-2:778642078716:testqueue",
+        "Condition": {
+          "StringEquals": {
+            "aws:SourceAccount": "778642078716"
+          },
+          "ArnLike": {
+            "aws:SourceArn": "arn:aws:s3:::my-test-dct-bucket1"
+          }
+        }
+      }
+    ]
+  }

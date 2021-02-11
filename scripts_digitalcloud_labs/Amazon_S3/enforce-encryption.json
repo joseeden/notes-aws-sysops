@@ -1,0 +1,20 @@
+{
+    "Version": "2012-10-17",
+    "Id": "PutObjPolicy",
+    "Statement": [
+        {
+            "Sid": "DenyUnEncryptedObjectUploads",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::my-test-dct-bucket1/*",
+            "Condition": {
+                "Null": {
+                    "s3:x-amz-server-side-encryption": "true"
+                }
+            }
+        }
+    ]
+}
+
+## Command: aws s3api put-object --body Company_Revenue.xlsx --key Company_Revenue.xlsx --bucket my-test-dct-bucket1 --server-side-encryption AES256

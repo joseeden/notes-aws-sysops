@@ -1,0 +1,40 @@
+#1 Grant Paul all actions on bucket objects (use with identity policy #3)
+
+{
+    "Version":"2012-10-17",
+    "Statement":[
+      {
+        "Sid":"AllowPaulAllActionsonBucket",
+        "Effect":"Allow",
+        "Principal": {
+			"AWS": "arn:aws:iam::515148227241:user/Paul"
+		},
+        "Action":["s3:*"],
+        "Resource":["arn:aws:s3:::my-test-dct-bucket/*"]
+      }
+    ]
+  }
+
+#2 Grant access from a specific source IP (use with IAM role on EC2 instance)
+
+{
+    "Version": "2012-10-17",
+    "Id": "S3PolicyId1",
+    "Statement": [
+      {
+        "Sid": "IPAllow",
+        "Effect": "Deny",
+        "Principal": "*",
+        "Action": "s3:*",
+        "Resource": [
+       "arn:aws:s3:::my-test-dct-bucket1",
+           "arn:aws:s3:::my-test-dct-bucket1/*"
+        ],
+        "Condition": {
+       "NotIpAddress": {"aws:SourceIp": "10.10.10.10./32"}
+        }
+      }
+    ]
+  }
+
+

@@ -1,0 +1,113 @@
+#1 List buckets
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "AllowGroupToSeeBucketListInTheConsole",
+        "Action": ["s3:ListAllMyBuckets"],
+        "Effect": "Allow",
+        "Resource": ["arn:aws:s3:::*"]
+      }
+    ]
+  }
+
+#2 List root-level bucket contents
+
+{
+"Version": "2012-10-17",                 
+"Statement": [
+    {
+        "Sid": "AllowGroupToSeeBucketListAndAlsoAllowGetBucketLocationRequiredForListBucket",
+        "Action": [ "s3:ListAllMyBuckets", "s3:GetBucketLocation" ],
+        "Effect": "Allow",
+        "Resource": [ "arn:aws:s3:::*"  ]
+    },
+    {
+        "Sid": "AllowRootLevelListingOfCompanyBucket",
+        "Action": ["s3:ListBucket"],
+        "Effect": "Allow",
+        "Resource": ["arn:aws:s3:::my-test-dct-bucket1"],
+        "Condition":{ 
+            "StringEquals":{
+                    "s3:prefix":[""], "s3:delimiter":["/"]
+                            }
+                    }
+    }
+] 
+}
+
+#3 Grant Paul access to Confidential folder (also for use with bucket policies for those labs)
+
+{
+    "Version": "2012-10-17",  
+    "Statement": [
+    {
+        "Sid": "AllowGroupToSeeBucketListAndAlsoAllowGetBucketLocationRequiredForListBucket",
+        "Action": [ "s3:ListAllMyBuckets", "s3:GetBucketLocation" ],
+        "Effect": "Allow",
+        "Resource": [ "arn:aws:s3:::*"  ]
+    },
+    {
+        "Sid": "AllowRootLevelListingOfCompanyBucket",
+        "Action": ["s3:ListBucket"],
+        "Effect": "Allow",
+        "Resource": ["arn:aws:s3:::my-test-dct-bucket1"],
+        "Condition":{ 
+            "StringEquals":{
+                    "s3:prefix":[""], "s3:delimiter":["/"]
+                            }
+                    }
+    },
+    {
+      "Sid": "AllowListBucketIfSpecificPrefixIsIncludedInRequest",
+      "Action": ["s3:ListBucket"],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::my-test-dct-bucket1"],
+      "Condition":{  "StringLike":{"s3:prefix":["Confidential/*"] }
+       }
+    }
+  ]
+}
+
+#4 Grant Paul access to GET and PUT objects in Confidential folder
+
+{
+    "Version": "2012-10-17",  
+    "Statement": [
+    {
+        "Sid": "AllowGroupToSeeBucketListAndAlsoAllowGetBucketLocationRequiredForListBucket",
+        "Action": [ "s3:ListAllMyBuckets", "s3:GetBucketLocation" ],
+        "Effect": "Allow",
+        "Resource": [ "arn:aws:s3:::*"  ]
+    },
+    {
+        "Sid": "AllowRootLevelListingOfCompanyBucket",
+        "Action": ["s3:ListBucket"],
+        "Effect": "Allow",
+        "Resource": ["arn:aws:s3:::my-test-dct-bucket1"],
+        "Condition":{ 
+            "StringEquals":{
+                    "s3:prefix":[""], "s3:delimiter":["/"]
+                            }
+                    }
+    },
+    {
+      "Sid": "AllowListBucketIfSpecificPrefixIsIncludedInRequest",
+      "Action": ["s3:ListBucket"],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::my-test-dct-bucket1"],
+      "Condition":{  "StringLike":{"s3:prefix":["Confidential/*"] }
+       }
+    },
+    {
+        "Sid":"AllowUserToReadWriteObjectDataInDevelopmentFolder", 
+        "Action":["s3:GetObject", "s3:PutObject"],
+        "Effect":"Allow",
+        "Resource":["arn:aws:s3:::my-test-dct-bucket1/Confidential/*"]
+    }
+  ]
+}
+
+
+
