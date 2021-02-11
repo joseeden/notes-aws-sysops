@@ -158,11 +158,13 @@ We have two available NAT solutions:
 - route table must be configured to route traffic from private subnets to NAT instance
 - must disable flag: **Source/Destination Check**
 
+<img src="../Images/nat-instance.png" width=700>
+
 To launch a NAT instance, you follow the same process of launching an instance, but you will use a "nat" for the AMI. This is available in the AWS Marketplace.
 
 **CONS:**
-- NAT instances are not highly available
-- not resilient
+- NAT instances are not highly availablem, not resilient
+- you are limited to the BW of the instance type
 - you must maintain the NAT instance
 - requires more work
 
@@ -184,19 +186,25 @@ NAT Gateways are a better alternative to NAT instances.
 - 5 Gbps per bandwidth with auto-scalingup to 45 Gbps
 - no security groups to manage
 
+<img src="../Images/nat-gw-1.png" width=700>
+
 Basically, the private subnet will talk to the NAT Gateway, which in turn will talk to the internet gateway.
 
 ### NAT Gateway - High Availability ###
 
 NAT Gateway is only resilient to a single AZ. To have high availability, you will need multiple NAT Gateways in multiple AZ.
 
-<img src="../Images/nat-gw.png" width=500>
+<img src="../Images/nat-gw.png" width=700>
 
 ### Comparison - NAT Instance vs. NAT Gateway ###
 
-You can find a good comparison between NAT Instances and NAT Gateways from the [AWS Documentation page](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html).
+There's a short comparison found in DigitalCloud's SysOps Cheatsheet.
 
-<img src="../Images/nat-comparison.png" width=500>
+<img src="../Images/nat-comparison-1.png" width=700>
+
+Similarly, you can find an extensive comparison between NAT Instances and NAT Gateways in the [AWS Documentation page](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html).
+
+<img src="../Images/nat-comparison.png" width=700>
 
 ______________________________________________________________
 
