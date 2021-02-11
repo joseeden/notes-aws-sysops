@@ -65,5 +65,12 @@ Of course, I don't expect everything to be as flawless.
 I know work and life may butt in from time to time, but I'll try to hopefully stick with this plan.
 
 Alright. Hope you ready for the next episode.
-
 __________________________________________________
+
+**UPDATE - 11-Feb-2021**
+
+I decided to check out a some of the first videos in Neal Davis SysOps course - found myself finishing 3 entire sections. The great part in Davis course is there's an **Exam scenario** section where he lists down the common scenario questions you can find in the exam, as well as in actual setup.
+
+I've added scripts I've used in the labs as well. Will be doing Davi's Practice Exam this afternoon.
+__________________________________________________
+
