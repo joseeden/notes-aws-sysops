@@ -25,7 +25,7 @@ So this year, I'm targeting the two remaining Associate certifications. And I'll
     <img src="Images/sysops-badge.png">
 </p>
 
-I'm giving myself two months to study and take the exam. I'll put here the notes and projects that I'll be working on while reviewing.
+I'm giving myself two months to study anPH ISSC Payroll and Benefits - DSV<ph.s.issc.payroll@ph.dsv.com></ph.s.issc.payroll@ph.dsv.com>d take the exam. I'll put here the notes and projects that I'll be working on while reviewing.
 
 As for the review materials, I'll also be focusing myself on these materials:
 
@@ -74,3 +74,20 @@ I decided to check out a some of the first videos in Neal Davis SysOps course - 
 I've added scripts I've used in the labs as well. Will be doing Davi's Practice Exam this afternoon.
 __________________________________________________
 
+**UPDATE - 04-Jun-2021**
+
+It took quite a while, in fact, it took another two months after my target date but still, here it is. 
+
+<p align=center>
+    <img src="Images/aws-sysops-cert.png">
+</p>
+
+
+Gotta admit, a lot has happened at home, at work, at myself. I guess I'll publish non-technical article in dev.to or hashnode - a summary of the first 6 months of 2021.
+
+It has been some bumpy ride, one heck of a rollercoaster during the past 4-6 months, but I am still grateful.
+
+Now that I'm starting on a new role at a new environment, I'm pretty positive and looking forward to what comes next.
+
+***To small wins and new beginnings!***
+__________________________________________________
